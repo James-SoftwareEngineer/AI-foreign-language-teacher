@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useCourse from '../hooks/useCourse';
+import useLoading from '../hooks/useLoding';
+import Loading from '../components/pageLoading';
 
 const Card = styled.div`
   /* Add your CSS styles here */
@@ -50,29 +52,49 @@ const ModalContent = styled.div`
 const Home = () => {
 
     const { courses, getCourses } = useCourse();
-
+    const { isLoading, isLodingTrue, isLodingFalse } = useLoading();
     const navigate = useNavigate();
-
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [courseName, setCourseName] = useState("");
+    const [courseDescription, setCourseDescription] = useState("");
 
     const handleModal = () => {
         setIsModalOpen(!isModalOpen);
     };
-
+    
     const handleModalBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {
             setIsModalOpen(false);
         }
     };
 
+    const handleAddCourse = () => {
+        // addCourse({ courseName, courseDescription });
+        setIsModalOpen(false);
+    }
+
+    const initializeHome = async () => {
+        isLodingTrue();
+        await getCourses();
+        isLodingFalse();
+    }
+
+    useEffect(() => {
+        initializeHome();
+    }, []);
+
+    if (isLoading) {
+        return <Loading />;
+    }
+
     const Modal = () => {
         return (
             <ModalBackground onClick={handleModalBackgroundClick}>
                 <ModalContent>
                     <h2>Add Learning Course</h2>
-                    <input type="text" placeholder="Course Name" />
-                    <input type="text" placeholder="Course Description" />
-                    <button onClick={handleModal}>Add</button>
+                    <input type="text" placeholder="Course Name" value={courseName} onChange={(c) => setCourseName(c.target.value)} />
+                    <input type="text" placeholder="Course Description" value={courseDescription} onChange={(c) => setCourseDescription(c.target.value)} />
+                    <button onClick={handleAddCourse}>Add</button>
                 </ModalContent>
             </ModalBackground>
         );
@@ -81,10 +103,6 @@ const Home = () => {
     const handleCardClick = (courseName: string) => {
         navigate(`/dashboard/${courseName}`);
     };
-
-    useEffect(() => {
-        getCourses();
-    }, []);
 
     return (
         <>
@@ -97,8 +115,8 @@ const Home = () => {
                 ))
             }
 
-            {/* <AddCourseButton onClick={handleModal}>Add Learning Course</AddCourseButton> */}
-            {/* {isModalOpen && <Modal />} */}
+            {/* <AddCourseButton onClick={handleModal}>Add Learning Course</AddCourseButton>
+            {isModalOpen && <Modal />} */}
         </>
     )
 }

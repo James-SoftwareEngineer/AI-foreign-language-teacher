@@ -60,7 +60,7 @@ const SignUp = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [level, setLevel] = useState("");
+    const [level, setLevel] = useState("beginner");
 
     const navigate = useNavigate();
     const { signUp } = useUser();

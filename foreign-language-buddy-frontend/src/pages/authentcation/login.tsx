@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from 'styled-components';
 import useUser from "../../hooks/useUser";
 import { useNavigate } from "react-router-dom";
+import useLoading from "../../hooks/useLoding";
 
 const LoginContainer = styled.div`
     display: flex;
@@ -46,20 +47,26 @@ const Login = () => {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
 
-    const navigate = useNavigate();
+    const navigate = useNavigate(); 
 
-    const { login } = useUser();
-    const handleSubmit = (e: React.FormEvent) => {
+    const { login, userData } = useUser();
+    const { isLoading, isLodingTrue, isLodingFalse } = useLoading();
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         // Add your login logic here
-
-        const userData = {
+        const userInfo = {
             name: name,
             password: password
         }
-
-        login(userData);
-        navigate('/');
+        isLodingTrue();
+        await login(userInfo);
+        if(userData){
+            isLodingFalse();
+        }
+        if (!isLoading) {
+            console.log("userData", userData);
+            navigate('/');
+        }
     };
 
     return (

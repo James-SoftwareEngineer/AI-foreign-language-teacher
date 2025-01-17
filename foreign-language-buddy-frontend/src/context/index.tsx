@@ -2,10 +2,11 @@ import React, { createContext, useState, useRef } from "react";
 
 export const GlobalContext = createContext<any>({})
 const initState = {
-    message: "",
-    isLoding: "",
+    isInitializeLoding: true,
+    isGenerateLoading: false,
+    isLoading: true,
     courses: [],
-    userData: {},
+    userData: null,
     chatHistory: [],
 }
 

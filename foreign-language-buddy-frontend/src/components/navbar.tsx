@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import useUser from "../hooks/useUser";
+import useLoading from "../hooks/useLoding";
 
 const NavbarContainer = styled.div`
   background-color: #333;
@@ -27,6 +28,7 @@ const NavbarLink = styled.div`
 const Navbar = () => {
   const navigate = useNavigate();
   const { userData, logOut, getUserData } = useUser();
+  const { isInitializeLodingTrue, isInitializeLodingFalse } = useLoading();
 
   const handleLogOut = () => {
     logOut();
@@ -34,7 +36,9 @@ const Navbar = () => {
   }
 
   useEffect(() => {
+    isInitializeLodingTrue();
     getUserData();
+    isInitializeLodingFalse();
   }, []);
 
   return (

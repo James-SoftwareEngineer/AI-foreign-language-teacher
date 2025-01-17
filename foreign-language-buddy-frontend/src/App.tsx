@@ -19,7 +19,7 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path='/' element={<Home />}></Route>
-          <Route path='/signup' element={<SignUp />}></Route>
+          <Route path='/sign-up' element={<SignUp />}></Route>
           <Route path='/login' element={<Login />}></Route>
           <Route path='/dashboard/:courseName' element={<Dashboard />}></Route>
           <Route path='/404' element={<NotFound />}></Route>

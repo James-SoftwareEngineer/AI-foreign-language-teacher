@@ -1,5 +1,5 @@
 import { userDA } from "../data-access";
-
+import bcrypt from "bcryptjs";
 const userService = {
 
     signUp: async(data: any) => {
@@ -8,14 +8,18 @@ const userService = {
         if (user) {
             throw new Error("User already exists");
         }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
         const newUser = {
             name: name,
             email: email,
-            password: password,
+            password: hashedPassword,
             userLevel: userLevel
         }
 
         const result = await userDA.create(newUser);
+        console.log("sign up result", result);
         return result;
     },
 
@@ -24,7 +28,8 @@ const userService = {
         if (!user) {
             throw new Error("User does not exist");
         }
-        if (user.password !== password) {
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
             throw new Error("Password is incorrect");
         }
         return user;

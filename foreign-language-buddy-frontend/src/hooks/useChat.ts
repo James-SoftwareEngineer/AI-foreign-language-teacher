@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { GlobalContext } from "../context";
-import axios from "axios";
-import { server } from "typescript";
+
 import service from "../service";
 
 const useChat = () => {
@@ -9,11 +8,12 @@ const useChat = () => {
 
     const getChatHistory = async (data: any) => {
         const chatHistory = await service.getChatHistory(data);
-        update({ chatHistory: chatHistory });
+        update({ chatHistory: chatHistory});
         return chatHistory;
     }
 
     const sendMessage = async (data: any) => {
+        update({ isGenerateLoading: true });
         const userRequest = {
             role: "user",
             content: data.message
@@ -22,16 +22,16 @@ const useChat = () => {
         update({ chatHistory: [...prevState.chatHistory, userRequest] });
         const botReply = await service.sendMessage(data);
         prevState = stateRef.current;
-        update({ chatHistory: [...prevState.chatHistory, botReply] });
+        update({ chatHistory: [...prevState.chatHistory, botReply.data] });
+        update({ isGenerateLoading: false });
     }
 
     const deleteChatHistory = async (data: any) => {
         const { courseName, userName, index } = data;
-        const chatHistory = await service.deleteChatHistory({ courseName, userName, index });
+        await service.deleteChatHistory({ courseName, userName, index });
         const tempChatHistory = [...stateRef.current.chatHistory];
         tempChatHistory.splice(index, 1);
         update({ chatHistory: tempChatHistory });
-        return chatHistory;
     }
 
     return {
@@ -39,6 +39,7 @@ const useChat = () => {
         sendMessage,
         deleteChatHistory,
 
+        isGenerateLoading: state.isGenerateLoading,
         chatHistory: state.chatHistory
     };
 

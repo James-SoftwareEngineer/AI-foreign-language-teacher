@@ -3,8 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from 'styled-components';
 import useUser from "../../../hooks/useUser";
 import useChat from "../../../hooks/useChat";
-import Loading from "../../../components/loading";
+import Loading from "../../../components/pageLoading";
 import { formatText } from "../../../utils";
+import GenerateText from "../../../components/generateText";
+import useLoading from "../../../hooks/useLoding";
 
 interface MessageBubbleProps {
     isUser: boolean;
@@ -29,6 +31,7 @@ const CourseTitle = styled.h1`
 `;
 
 const MessageArea = styled.div`
+    position: relative;
     width: 100%;
     height: 59vh;
     padding: 10px;
@@ -112,18 +115,29 @@ const DeleteIcon = styled.button`
     }
 `;
 
+const GenerateTextOverlay = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+`;
 
 const Dashboard = () => {
     const navigate = useNavigate();
     const [messages, setMessages] = useState("");
-    const [isLoading, setIsLoading] = useState(true);
-
+    const { isLoading, isGenerateLoading, isLodingTrue, isLodingFalse, isGenerateLoadingTrue, isGenerateLoadingFalse, isInitializeLoding } = useLoading();
     const { courseName } = useParams();
     const { userData } = useUser();
     const { chatHistory, getChatHistory, sendMessage, deleteChatHistory } = useChat();
 
     const handleSend = () => {
-        if (messages.trim()) {
+        if (messages) {
             sendMessage({ courseName, userName: userData.name, message: messages });
             setMessages("");
         }
@@ -133,33 +147,43 @@ const Dashboard = () => {
         console.log("delete message", index);
         deleteChatHistory({ courseName, userName: userData.name, index });
     }
+    
+    const initializeDashboard = async () => {
+        isLodingTrue();
+        if (!userData) {
+            navigate("/404");
+            return;
+        }
+        await getChatHistory({ courseName, userName: userData.name });
+        isLodingFalse();
+    };
 
     useEffect(() => {
-        const initializeDashboard = async () => {
-            setIsLoading(true);
-            if (!userData.name) {
-                navigate("/404");
-                return;
-            }
-            await getChatHistory({ courseName, userName: userData.name });
-            setIsLoading(false);
-        };
-
-        initializeDashboard();
-    }, []);
+        if(!isInitializeLoding){
+            initializeDashboard();
+        }
+    }, [isInitializeLoding]);
 
     if (isLoading) {
         return <Loading />;
     }
 
+    
     return (
         <DashboardContainer>
             <CourseTitle>{courseName}</CourseTitle>
             <MessageArea>
+                {isGenerateLoading ?? (
+                    // <GenerateTextOverlay>
+                        <GenerateText />
+                    // </GenerateTextOverlay>
+                )}
                 {chatHistory.map((message: any, index: number) => {
                     if (index === 0) return null;
                     const isUser = message.role === "user";
                     return (
+                        
+                        
                         <MessageBubble key={index} isUser={isUser}>
                             {!isUser && (
                                 <Avatar

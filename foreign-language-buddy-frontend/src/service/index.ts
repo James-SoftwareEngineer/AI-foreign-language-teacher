@@ -19,10 +19,15 @@ const serverProvider = {
         return result.data
     },
 
-    selectCourse : async (data: string) => {
-        const result = await axios.post(`${serverProvider.serverUrl}/select-course`, data);
-        return result.data
-    },
+    // selectCourse : async (data: string) => {
+    //     const result = await axios.post(`${serverProvider.serverUrl}/select-course`, data);
+    //     return result.data
+    // },
+
+    // addCourse : async (data: any) => {
+    //     const result = await axios.post(`${serverProvider.serverUrl}/add-course`, data);
+    //     return result.data
+    // },
 
     initBot : async (data: any) => {
         const result = await axios.post(`${serverProvider.serverUrl}/chat/init`, data);
@@ -31,7 +36,7 @@ const serverProvider = {
 
     getChatHistory : async (data: any) => {
         const result = await axios.post(`${serverProvider.serverUrl}/chat/get-history`, data);
-        return result.data.chatHistory
+        return result.data.data.chatHistory
     },
 
     sendMessage : async (data: any) => {

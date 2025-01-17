@@ -2,10 +2,10 @@ import { courseDA } from "../data-access";
 
 const courseService = {
 
-    // async createCourse(course: any) {
-    //     const course = await DataAccess.create(course);
+    // async addCourse(courseName: string, courseDescription: string) {
+    //     const course = await courseDA.create({ name: courseName, description: courseDescription });
     //     return course;
-    // }
+    // },
 
     async getCourses() {
         const courses = await courseDA.findAll();

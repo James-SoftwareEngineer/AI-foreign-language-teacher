@@ -7,15 +7,23 @@ const useUser = () => {
 
     const signUp = async (userData: any) => {
         const result = await serverProvider.signUp(userData);
-        alert("SignUp Successfully");
-        console.log(result);
+        if (result.message === "SignUp Successfully") {
+            alert("SignUp Successfully");
+        } else {
+            alert("SignUp Failed");
+        }
     }
 
     const login = async (userData: any) => {
+        
         const result = await serverProvider.login(userData);
-        console.log("result", result);
-        localStorage.setItem("userData", JSON.stringify(result));
-        getUserData();
+        console.log(result);
+        if (result.message === "Login Successfully") {
+            localStorage.setItem("userData", JSON.stringify(result.data));
+            getUserData();
+        } else {
+            alert("userName or password is incorrect");
+        }
     }
 
     const logOut = () => {
@@ -25,16 +33,12 @@ const useUser = () => {
 
     const getUserData = () => {
         const userData = localStorage.getItem("userData");
-        console.log("userData", userData);
         if (userData) {
             const user = JSON.parse(userData);
-            console.log("user", user);
             update({ userData: user });
         } else {
-            console.log("userData is null");
             update({ userData: null });
         }
-        console.log("state.userData", state.userData);
     }
 
     return {
