@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import useChat from '../../../hooks/useChat';
 import { useParams } from 'react-router-dom';
 import useUser from '../../../hooks/useUser';
-import useLoading from '../../../hooks/useLoding';
+import useLoading from '../../../hooks/useLoading';
 import styled from 'styled-components';
-import { formatText } from '../../../utils';
+import { formatText, generateChartCode } from '../../../utils';
 import GenerateText from '../../../components/generateText';
 
 
@@ -39,6 +39,7 @@ const MessageBubble = styled.div<MessageBubbleProps>`
 
 
 const MessageContent = styled.div<MessageBubbleProps>`
+    position: relative;
     max-width: 70%;
     padding: 10px 15px;
     border-radius: 15px;
@@ -57,18 +58,18 @@ const Avatar = styled.img`
 `;
 
 
-const DeleteIcon = styled.button`
-    position: relative;
-    top: 5px;
-    right: 5px;
-    background: none;
-    border: none;
+const DeleteIcon = styled.button<MessageBubbleProps>`
+    background: ${props => !props.isUser ? 'none' : '#fff'};
+    border: ${props => !props.isUser ? 'none' : '1px solid #ccc'};
+    border-radius: ${props => !props.isUser ? '0' : '50%'};
     color: #666;
     font-size: 12px;
     cursor: pointer;
-    opacity: 0.5;
+    opacity: ${props => !props.isUser ? 0.5 : 1};
     transition: opacity 0.2s ease;
     padding: 2px;
+    width: ${props => !props.isUser ? 'auto' : '20px'};
+    height: ${props => !props.isUser ? 'auto' : '20px'};
     display: flex;
     align-items: center;
     justify-content: center;
@@ -92,6 +93,41 @@ const GenerateTextOverlay = styled.div`
     z-index: 1000;
 `;
 
+const CopyButton = styled.button`
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 12px;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+    padding: 2px;
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+        opacity: 1;
+    }
+`;
+
+const ButtonContainer = styled.div<MessageBubbleProps>`
+    display: flex;
+    gap: 5px;
+    position: absolute;
+    ${props => !props.isUser ? `
+        bottom: 5px;
+        right: 5px;
+    ` : `
+        top: 0px;
+        left: -20px;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        &:hover {
+            opacity: 1;
+        }
+    `}
+`;
 
 const MessagePanel = () => {
     const { courseName } = useParams();
@@ -99,6 +135,7 @@ const MessagePanel = () => {
     const { chatHistory, deleteChatHistory } = useChat();
     const { isGenerateLoading } = useLoading();
     const messageAreaRef = useRef<HTMLDivElement>(null);
+    const [copySuccess, setCopySuccess] = useState(false);
 
     useEffect(() => {
         if (messageAreaRef.current) {
@@ -110,6 +147,16 @@ const MessagePanel = () => {
         console.log("delete message", index);
         deleteChatHistory({ courseName, userName: userData.name, index });
     }
+
+    const handleCopyMessage = async (content: string) => {
+        try {
+            await navigator.clipboard.writeText(content);
+            setCopySuccess(true);
+            setTimeout(() => setCopySuccess(false), 2000);
+        } catch (error) {
+            console.error('Failed to copy text:', error);
+        }
+    };
 
     return (
         <MessageArea>
@@ -123,8 +170,6 @@ const MessagePanel = () => {
                     if (index === 0) return null;
                     const isUser = message.role === "user";
                     return (
-
-
                         <MessageBubble key={index} isUser={isUser}>
                             {!isUser && (
                                 <Avatar
@@ -134,9 +179,25 @@ const MessagePanel = () => {
                             )}
                             <MessageContent isUser={isUser}>
                                 <div dangerouslySetInnerHTML={{ __html: formatText(message.content) }} />
-                                <DeleteIcon onClick={() => deleteMessage(index)}>
-                                    ✕
-                                </DeleteIcon>
+                                <ButtonContainer isUser={isUser}>
+                                    {!isUser ? (
+                                        <>
+                                            <CopyButton 
+                                                onClick={() => handleCopyMessage(message.content)}
+                                                title="Copy message"
+                                            >
+                                                {copySuccess ? '✓' : '📋'}
+                                            </CopyButton>
+                                            <DeleteIcon isUser={isUser} onClick={() => deleteMessage(index)}>
+                                                ✕
+                                            </DeleteIcon>
+                                        </>
+                                    ) : (
+                                        <DeleteIcon isUser={isUser} onClick={() => deleteMessage(index)}>
+                                            ✕
+                                        </DeleteIcon>
+                                    )}
+                                </ButtonContainer>
                             </MessageContent>
                             {isUser && (
                                 <Avatar

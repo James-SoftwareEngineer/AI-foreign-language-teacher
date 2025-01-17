@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useCourse from '../hooks/useCourse';
-import useLoading from '../hooks/useLoding';
+import useLoading from '../hooks/useLoading';
 import Loading from '../components/pageLoading';
 
 const Card = styled.div`

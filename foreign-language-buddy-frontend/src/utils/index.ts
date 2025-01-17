@@ -4,3 +4,8 @@ export function formatText(text: string) {
         .replace(/__(.+?)__/g, '<i>$1</i>')
     // ... other formatting rules
 }
+
+export const generateChartCode = (chartData: any) => {
+    const codeString = `${chartData}`;
+    return codeString;
+};

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import useUser from "../hooks/useUser";
-import useLoading from "../hooks/useLoding";
+import useLoading from "../hooks/useLoading";
 
 const NavbarContainer = styled.div`
   background-color: #333;

@@ -3,6 +3,7 @@ import useUser from '../../../hooks/useUser';
 import useChat from '../../../hooks/useChat';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import useLoading from '../../../hooks/useLoading';
 
 
 const InputContainer = styled.div`
@@ -12,12 +13,32 @@ const InputContainer = styled.div`
 `;
 
 
-const MessageInput = styled.input`
+const MessageInput = styled.textarea`
     width: 100%;
     padding: 10px;
-    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    resize: none;
+    // height: 10px;
+    overflow-y: auto;
+    font-family: 'Arial', sans-serif;
+    
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
 `;
 
 
@@ -34,12 +55,17 @@ const SendButton = styled.button`
 `;
 
 
-const InputPanel = () => {
+interface InputPanelProps {
+    disabled?: boolean;
+}
+
+const InputPanel: React.FC<InputPanelProps> = ({ disabled }) => {
 
     const [messages, setMessages] = useState("");
     const { courseName } = useParams();
     const { userData } = useUser();
     const { sendMessage } = useChat();
+    const { isGenerateLoading } = useLoading();
 
     
     const handleSend = () => {
@@ -49,19 +75,33 @@ const InputPanel = () => {
         }
     }
 
+    const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const textarea = e.target;
+        setMessages(textarea.value);
+        
+        textarea.scrollTop = textarea.scrollHeight;
+    };
+
     return (
             <InputContainer>
                 <MessageInput
                     placeholder="Type your message..."
                     value={messages}
-                    onChange={(e) => setMessages(e.target.value)}
+                    onChange={handleInput}
                     onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
                             handleSend();
                         }
                     }}
+                    disabled={isGenerateLoading}
                 />
-                <SendButton onClick={handleSend}>Send</SendButton>
+                <SendButton 
+                    disabled={isGenerateLoading}
+                    onClick={handleSend}
+                >
+                    Send
+                </SendButton>
             </InputContainer>
     );
 };

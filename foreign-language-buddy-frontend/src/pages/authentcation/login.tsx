@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from 'styled-components';
 import useUser from "../../hooks/useUser";
 import { useNavigate } from "react-router-dom";
-import useLoading from "../../hooks/useLoding";
+import useLoading from "../../hooks/useLoading";
 
 const LoginContainer = styled.div`
     display: flex;

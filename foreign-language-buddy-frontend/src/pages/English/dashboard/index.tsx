@@ -6,7 +6,7 @@ import useChat from "../../../hooks/useChat";
 import Loading from "../../../components/pageLoading";
 import { formatText } from "../../../utils";
 import GenerateText from "../../../components/generateText";
-import useLoading from "../../../hooks/useLoding";
+import useLoading from "../../../hooks/useLoading";
 import MessagePanel from "./messagePanel";
 import InputPanel from "./inputPanel";
 
@@ -42,7 +42,7 @@ const Dashboard = () => {
     const { isLoading, isLodingTrue, isLodingFalse, isInitializeLoding } = useLoading();
     const { courseName } = useParams();
     const { userData } = useUser();
-    const { chatHistory, getChatHistory } = useChat();
+    const { getChatHistory } = useChat();
 
     const initializeDashboard = async () => {
         isLodingTrue();
