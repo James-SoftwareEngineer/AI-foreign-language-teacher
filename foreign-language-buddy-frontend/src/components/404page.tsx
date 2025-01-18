@@ -6,32 +6,50 @@ const NotFoundContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 82vh;
-  background-color: #f0f0f0;
+  min-height: calc(100vh - 64px);
+  background: linear-gradient(to bottom, #1a1b1e, #2d2e32);
+  color: #ffffff;
+  padding: 40px 20px;
 `;
 
 const NotFoundTitle = styled.h1`
-  font-size: 4rem;
-  color: #333;
-  margin-bottom: 20px;
+  font-size: 6rem;
+  color: #ffffff;
+  margin-bottom: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 `;
 
 const NotFoundMessage = styled.p`
-  font-size: 1.5rem;
-  color: #666;
-  margin-bottom: 40px;
+  font-size: 1.3rem;
+  color: #a0aec0;
+  margin-bottom: 32px;
+  text-align: center;
+  line-height: 1.6;
+  max-width: 600px;
 `;
 
 const GoHomeButton = styled.button`
-  background-color: #007bff;
-  color: #fff;
+  background: linear-gradient(135deg, #64ffda, #48bb78);
+  color: #1a1b1e;
+  padding: 16px 32px;
   border: none;
-  padding: 10px 20px;
-  font-size: 1.5rem;
+  border-radius: 50px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-size: 1.2rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(100, 255, 218, 0.3);
+
   &:hover {
-    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(100, 255, 218, 0.4);
+    background: linear-gradient(135deg, #48bb78, #38a169);
+  }
+
+  &:active {
+    transform: translateY(1px);
   }
 `;
 
@@ -41,8 +59,8 @@ const NotFound = () => {
         <NotFoundContainer>
             <NotFoundTitle>404</NotFoundTitle>
             <NotFoundMessage>Oops! The page you're looking for doesn't exist.</NotFoundMessage>
-            <NotFoundMessage>Please login to continue.</NotFoundMessage>
-            <GoHomeButton onClick={() => navigate('/')}>Go Home</GoHomeButton>
+            <NotFoundMessage>Please login to continue your learning journey.</NotFoundMessage>
+            <GoHomeButton onClick={() => navigate('/')}>Return Home</GoHomeButton>
         </NotFoundContainer>
     )
 }

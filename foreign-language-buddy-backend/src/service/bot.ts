@@ -15,7 +15,7 @@ const botService = {
                 }
             ]
         });
-        const initalAnswer = `Hello! I am EnglishBuddy, here to help you practice and improve your English. Feel free to talk about anything you like, or ask questions about English grammar, vocabulary, or pronunciation. I'll adjust our conversation to focus on ${courseName} English. How can I help you with that?`;
+        const initalAnswer = `Hello! <b>${userName}!</b> I am EnglishBuddy, here to help you practice and improve your English. Feel free to talk about anything you like, or ask questions about English grammar, vocabulary, or pronunciation. I'll adjust our conversation to focus on ${courseName} English. How can I help you with that?`;
         const contents = [
             {
                 role: "user",

@@ -19,18 +19,25 @@ const DashboardContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px 12%;
-    background-color: #f7f7f7;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    height: 100%;
+    padding: 0.5rem 12%;
+    background: linear-gradient(
+        135deg,
+        #0A0C0F 0%,
+        #111419 100%
+    );
+    min-height: calc(100vh - 157px);
 `;
 
 const CourseTitle = styled.h1`
-    font-size: 2em;
-    color: #333;
-    margin-bottom: 20px;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 2.5em;
+    color: #ffffff;
+    margin: 0;
+    font-weight: 600;
+    text-align: center;
+    position: relative;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: -0.5px;
 `;
 
 
@@ -55,7 +62,7 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        if(!isInitializeLoding){
+        if (!isInitializeLoding) {
             initializeDashboard();
         }
     }, [isInitializeLoding]);
@@ -64,8 +71,9 @@ const Dashboard = () => {
         return <Loading />;
     }
 
-    
+
     return (
+
         <DashboardContainer>
             <CourseTitle>{courseName}</CourseTitle>
             <MessagePanel />
